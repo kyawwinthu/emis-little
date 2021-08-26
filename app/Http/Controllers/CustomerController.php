@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use App\Customer;
+use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {
@@ -13,7 +14,8 @@ class CustomerController extends Controller
      * Add Customer Page
      */
     public function addCustomer(){
-        return view('addCustomer');
+        $customer = new Customer;
+        return view('addCustomer')->with('customer',$customer);
     }
 
     /**
@@ -22,17 +24,11 @@ class CustomerController extends Controller
     public function add(){
        // Validation
        $validator = validator(request()->all(), [
-        'name' => 'required',
-        'phone' => 'required',
-        'zipcode' => 'required',
-        'perfecture' => 'required',
-        'city' => 'required',
-        'address' => 'required',
-        'facebook_url' => 'required'
+        'name' => 'required'
         ]); 
 
         if($validator->fails()){
-            return back()->withErrors($validator);
+            return back()->withErrors($validator)->withInput();
         }
 
         $customer = new Customer;
@@ -43,16 +39,64 @@ class CustomerController extends Controller
         $customer->city = request()->city;
         $customer->address = request()->address;
         $customer->facebook_url = request()->facebook_url;
+
         $customer->save();
         return redirect("home")->withSuccess('Successfully Added.');
     }
 
     /**
-     * Sub Fun
+     * Detail
      */
-    public function createCustomer(array $data){
-        
+    public function detail($id){
+        $customer = Customer::find($id);
+        return view('detailCustomer')->with('customer',$customer);
+    }
 
-        return $customer;
+    /**
+     * Edit Customer Page
+     */
+    public function editCustomer($id){
+        $customer = Customer::find($id);
+        return view('editCustomer')->with('customer',$customer);
+    }
+
+    /**
+     * Edit Customer Fun
+     */
+    public function edit(){
+        // Validation
+        $validator = validator(request()->all(), [
+         'name' => 'required'
+         ]); 
+ 
+         if($validator->fails()){
+             return back()->withErrors($validator)->withInput();
+         }
+
+         $customerArr = array('name'=>request()->name, 
+                            'phone'=>request()->phone,
+                            'zipcode'=>request()->zipcode , 
+                            'perfecture'=>request()->perfecture, 
+                            'city'=>request()->city, 
+                            'address'=>request()->address, 
+                            'facebook_url'=>request()->facebook_url);
+ 
+         DB::table('customers')
+                    ->where('id', request()->id)
+                    ->update($customerArr);
+
+         return redirect("home")->withSuccess('Successfully Updated.');
+     }
+
+     /**
+     * Delete Customer Page | Fun
+     */
+    public function deleteCustomer($id){
+        $customer = Customer::find($id);
+        DB::table('customers')
+                    ->where('id', '=', $id)
+                    ->delete();
+
+        return redirect("home")->withSuccess('Successfully Deleted.');
     }
 }

@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Session;
 use Hash;
 use App\Customer;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
 {
@@ -23,16 +25,20 @@ class AuthController extends Controller
      */
     public function login(Request $request){
         // Validation
-        $request->validate([
+        $validator = validator(request()->all(), [
             'email' => 'required',
             'password' => 'required'
         ]);
+
+        if($validator->fails()){
+            return back()->withErrors($validator)->withInput();
+        }
+
         $user = $request->only('email', 'password');
         if(Auth::attempt($user)){
-            return redirect()->intended('home')
-                            ->withSuccess('Logged-in');
+            return redirect()->intended('home');
         }
-        return redirect("login")->withSuccess('Input values are wrong.');
+        return redirect("login")->withSuccess('Input values are wrong.')->withInput();
     }
 
     /**

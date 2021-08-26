@@ -40,19 +40,36 @@
         <div class="row">
             <div class="col-md-4 offset-md-4">
                 <div class="card login-card">
-                    <div class="card-header mb-4">
+                    <div class="card-header mb-3">
                         <h1>Emi's LBC</h1>
                     </div>
                     <div class="card-body">
                         <form action="{{ route('userLogin') }}" method="post">
                             @csrf
+
+                            {{-- Validation Error Message --}}
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                        <span class="text-danger">@error('email'){{ $message }} @enderror</span>
+                                    @if ($errors->has('email') && $errors->has('password'))
+                                        <br>
+                                    @endif
+                                    <span class="text-danger">@error('password'){{ $message }} @enderror</span>
+                                </div>
+                            @endif
+                            @if (session('success'))
+                            <div class="alert alert-danger">
+                                <span class="text-danger">{{ session('success') }}</span>
+                            </div>
+                            @endif
+
+                            {{-- Login Form --}}
                             <div class="input-group mb-4">
                                 <span class="input-group-text" id="basic-addon1">
                                     <i class="fas fa-envelope"></i>
                                 </span>
                                 <input type="text" name="email" class="form-control" placeholder="email" value="{{ old('email') }}"
                                 aria-label="email" aria-describedby="basic-addon1">
-                                <span class="text-danger">@error('email'){{ $message }} @enderror</span>
                             </div>
                             <div class="input-group mb-4">
                                 <span class="input-group-text" id="basic-addon2">
@@ -60,11 +77,11 @@
                                 </span>
                                 <input type="password" name="password" class="form-control" placeholder="password" value="{{ old('password') }}"
                                 aria-label="password" aria-describedby="basic-addon2">
-                                <span class="text-danger">@error('password'){{ $message }} @enderror</span>
                             </div>
                             <div class="d-grid form-group mb-4 max-auto">
                                 <button type="submit" class="btn">Login</button>
                             </div>
+
                         </form>
                     </div>
                 </div>

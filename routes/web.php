@@ -43,3 +43,7 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
  */
 Route::get('/addCustomer',[CustomerController::class, 'addCustomer'])->name('addCustomer');
 Route::post('/add',[CustomerController::class, 'add'])->name('add');
+Route::get('/detail/{id}', [CustomerController::class, 'detail'])->name('detail');
+Route::get('/editCustomer/{id}',[CustomerController::class, 'editCustomer'])->name('editCustomer');
+Route::post('/edit',[CustomerController::class, 'edit'])->name('edit');
+Route::get('/deleteCustomer/{id}',[CustomerController::class, 'deleteCustomer'])->name('deleteCustomer');
