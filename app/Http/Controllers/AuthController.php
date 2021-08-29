@@ -10,6 +10,7 @@ use Hash;
 use App\Customer;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use DataTables;
 
 class AuthController extends Controller
 {
@@ -29,11 +30,9 @@ class AuthController extends Controller
             'email' => 'required',
             'password' => 'required'
         ]);
-
         if($validator->fails()){
             return back()->withErrors($validator)->withInput();
         }
-
         $user = $request->only('email', 'password');
         if(Auth::attempt($user)){
             return redirect()->intended('home');
@@ -44,13 +43,31 @@ class AuthController extends Controller
     /**
      * Home Page
      */
-    public function home(){
+    public function home(Request $request){
         if(Auth::check()){
-            $customers = Customer::all();
-            return view('auth.home')->with('customers',$customers);
+            if ($request->ajax()) {
+                $data = Customer::latest()->get();
+                return Datatables::of($data)
+                        ->addIndexColumn()
+                        ->addColumn('combileAddress', function($row){
+                            return $row->zipcode . " " . $row->perfecture . " " . $row->city . " " . $row->address ;
+                        })
+                        ->rawColumns(['combileAddress'])
+                        ->addColumn('action', function($row){
+                            return $this->getActionColumn($row);
+                        })
+                        ->rawColumns(['action'])
+                        ->make(true);
+            }
+            return view('auth.home');
         }
-
         return redirect("login")->withSuccess('Access is not permitted.');
+    }
+
+    protected function getActionColumn($data): string
+    {
+        $showUrl = route('detail', $data->id);
+        return "<a class='btn btn-primary btn-sm' data-value='$data->id' href='$showUrl'>Detail</a>";
     }
 
     /**

@@ -24,47 +24,47 @@ tbody > tr{
         <i class="fa fa-plus-circle"></i>
         <span class="d-lg-inline btn-add-customer">Add Customer</span>
     </a>
-    <table class="table table-bordered bg-light">
+    <table class="table table-bordered bg-light yajra-datatable">
         <thead>
             <tr>
             <th>#</th>
             <th>Name</th>
             <th>Phone</th>
-            <th>Prefecture/City</th>
-            <th class="d-none d-sm-table-cell">Address</th>
-            <th class="d-none d-sm-table-cell">FacebookAcc</th>
+            <th>Address</th>
+            <th>Action</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($customers as $key=>$customer)
-            <tr data-href="{{ route('detail' , ['id' => $customer->id]) }}">
-                <td>{{ ++$key }}</th>
-                <td>{{ $customer->name }}</td>
-                <td>{{ $customer->phone }}</td>
-                <td>{{ $customer->city }}</td>
-                <td class="d-none d-sm-table-cell">{{ $customer->address }}</td>
-                <td class="d-none d-sm-table-cell">{{ $customer->facebook_url }}</td>
-            </tr>
-            @endforeach
         </tbody>
     </table>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', ()=> {
-        const rows = document.querySelectorAll("tr[data-href");
-        rows.forEach(row => {
-            row.addEventListener("click", () => {
-                window.location.href = row.dataset.href;
-            });
-        });
-    });
+<script type="text/javascript">
+    $(function () {
+      var table = $('.yajra-datatable').DataTable({
+          processing: true,
+          serverSide: true,
+          ajax: "{{ route('home') }}",
+          columns: [
+              {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+              {data: 'name', name: 'name'},
+              {data: 'phone', name: 'phone'},
+              {data: 'combileAddress', name: 'combileAddress'},
+              {data: 'action', name: 'action', orderable: false, searchable: false},
+          ]
+      });
 
+    });
+  </script>
+
+<script>
     window.setTimeout(function() {
         $(".alert").fadeTo(500, 0).slideUp(500, function(){
             $(this).remove(); 
         });
     }, 2000);
 </script>
+
+
 
 @endsection

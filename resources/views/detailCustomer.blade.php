@@ -9,6 +9,9 @@
         h6{
             margin-bottom: 0px;
         }
+        textarea{
+            text-align: left;
+        }
     </style>
 
 
@@ -16,11 +19,9 @@
         <div class="row">
             <div>
                 <div class="card login-card mb-4">
-                    <div class="card-header">
-                        <div class="float-start">
+                    <div class="card-header d-flex justify-content-between">
                         <h6 class="float-start">Customer Detail</h6>
-                        </div>
-                        <div class="float-end">
+                        <div>
                             <a href="{{ route('editCustomer' , ['id' => $customer->id]) }}" class="btn btn-primary btn-sm mb-3">
                                 <i class="fa fa-pencil-alt"></i>
                                 <span class="d-lg-inline btn-add-customer">Edit</span>
@@ -42,20 +43,9 @@
                                 <input type="text" name="phone" class="form-control" value="{{ $customer->phone }}" placeholder="" disabled>
                             </div>
                             <div class="form-group mb-3 col-lg-6">
-                                <label for="zipcode" class="form-label">Zip Code (XXX-XXXX)</label>
-                                <input type="text" name="zipcode" class="form-control" value="{{ $customer->zipcode }}" placeholder="" disabled>
-                            </div>
-                            <div class="form-group mb-3 col-lg-6">
-                                <label for="perfecture" class="form-label">Perfecture</label>
-                                <input type="text" name="perfecture" class="form-control" value="{{ $customer->perfecture }}" placeholder="" disabled>
-                            </div>
-                            <div class="form-group mb-3 col-lg-6">
-                                <label for="city" class="form-label">City</label>
-                                <input type="text" name="city" class="form-control" value="{{ $customer->city }}" placeholder="" disabled>
-                            </div>
-                            <div class="form-group mb-3 col-lg-6">
-                                <label for="address" class="form-label">Address</label>
-                                <input type="text" name="address" class="form-control" value="{{ $customer->address }}" placeholder="" disabled>
+                                <label for="zipcode" class="form-label">Address</label>
+                                <textarea class="form-control" disabled>{{ $customer->zipcode }} , {{ $customer->perfecture }} / {{ $customer->city }} ,{{ $customer->address }}
+                                </textarea>
                             </div>
                             <div class="form-group mb-4 col-lg-6">
                                 <label for="facebook_url" class="form-label">facebook URL</label>

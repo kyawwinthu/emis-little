@@ -69,7 +69,7 @@
                                 <input type="text" name="facebook_url" class="form-control" placeholder="">
                                 <span class="text-danger">@error('facebook_url'){{ $message }} @enderror</span>
                             </div>
-                            <div class="d-grid form-group mb-3 max-auto">
+                            <div class="d-grid form-group mb-3 max-auto col-lg-12">
                                 <button type="submit" class="btn btn-primary">Add</button>
                             </div>
                             </div>
